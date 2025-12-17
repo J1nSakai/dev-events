@@ -6,6 +6,8 @@ import Image from "next/image";
 import BookEvent from "./BookEvent";
 import EventCard from "./EventCard";
 import { cacheLife } from "next/cache";
+import connectDB from "@/lib/mongoose";
+import mongoose from "mongoose";
 
 const EventDetailItem = ({
   icon,
@@ -53,7 +55,17 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
   const response = await fetch(`${BASE_URL}/api/events/${slug}`);
   const { event } = await response.json();
 
-  const bookings = (await Booking.countDocuments({ eventId: event._id })) || 0;
+  // Ensure DB connection and guard against errors in production
+  let bookings = 0;
+  try {
+    await connectDB();
+    const eventObjectId =
+      typeof event._id === "string" ? new mongoose.Types.ObjectId(event._id) : event._id;
+    bookings = (await Booking.countDocuments({ eventId: eventObjectId })) || 0;
+  } catch (err) {
+    console.error("Error counting bookings:", err);
+    bookings = 0;
+  }
 
   const similarEvents: IEvent[] = await getSimilarEventsBySlug(slug);
 
