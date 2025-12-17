@@ -2,15 +2,17 @@ import EventCard from "@/components/EventCard";
 import ExploreBtn from "@/components/ExploreBtn";
 import { IEvent } from "@/database";
 import { cacheLife } from "next/cache";
+import { events } from "@/lib/constants";
+
+// const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const Page = async () => {
   "use cache";
   cacheLife("hours");
-  const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
-  const response = await fetch(`${BASE_URL}/api/events`);
+  // const response = await fetch(`${BASE_URL}/api/events`);
 
-  const data = await response.json();
-  const events: IEvent[] = data.events;
+  // const data = await response.json();
+  // const events: IEvent[] = data.events;
   return (
     <section>
       <h1 className="text-center">
@@ -27,7 +29,7 @@ const Page = async () => {
         <div className="events">
           {events &&
             events.length > 0 &&
-            events.map((event: IEvent) => (
+            events.map((event) => (
               <div key={event.title}>
                 <EventCard {...event} />
               </div>
