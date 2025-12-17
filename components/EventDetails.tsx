@@ -50,8 +50,8 @@ const EventDetails = async ({ params }: { params: Promise<string> }) => {
 
   const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
-  //   const response = await fetch(`${BASE_URL}/api/events/${slug}`);
-  //   const { event } = await response.json();
+  const response = await fetch(`${BASE_URL}/api/events/${slug}`);
+  const { event } = await response.json();
 
   const bookings = (await Booking.countDocuments({ eventId: event._id })) || 0;
 
